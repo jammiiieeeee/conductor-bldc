@@ -142,11 +142,12 @@ Copper is the only hue. It marks: the windings in 3D, the current phase in the c
 
 ### Motion
 
-- One authored moment: the explode. A spring (`v += (target − v) × 0.14; v ×= 0.76`) drives every part along the axis at once; the camera dollies 112 → 260 units in step, so the object keeps its size as it opens.
+- One authored moment: the explode. Every part eases along the axis with a frame-rate-independent exponential, `cur += (target − cur) × (1 − e^(−9 dt))`, so it settles in roughly 0.35 s and never overshoots (no bounce at either end of travel). The camera dollies 112 → 233 units in step, so the object keeps its size as it opens.
+- Windings and stator travel as one unit. Copper is wound onto the teeth, so pulling them apart would slide coils through the laminations; the exploded view keeps them seated and lets the end turns read.
 - Rotor spin (0.55 rad/s) only while the assembly is closed (`e < 0.1`); it stops the instant the parts separate.
 - Idle turntable at 0.05 rad/s, paused while dragging, while a part is selected, and for 2.6 s after any interaction.
 - Part focus: others desaturate toward `#d3d9d9` at 0.86, the selected part lifts 2.6 units. Both ease at 0.14–0.18 per frame.
-- Field figure: 60° steps on `cubic-bezier(.34,1.1,.4,1)`, 0.62 s, 1.15 s apart.
+- Field figure: 60° steps on `cubic-bezier(.2,0,0,1)` (fast out, gentle settle, no overshoot), 0.62 s, 1.15 s apart.
 - `prefers-reduced-motion: reduce` removes spin, turntable and transitions; the explode snaps.
 
 ## Components

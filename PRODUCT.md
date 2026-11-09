@@ -28,7 +28,7 @@ Read at desk scale, and on a phone one-handed. Pointer, touch and keyboard all m
 
 ## Capabilities and Constraints
 
-- A real 3D scene: nine procedurally built solids, orbit by drag, wheel zoom, click to select, hover to preview. The exploded view is a spring-damped animation of one axial stack, with a camera dolly that keeps the assembly framed at every explode value.
+- A real 3D scene: nine procedurally built solids, orbit by drag, wheel zoom, click to select, hover to preview. The exploded view is a damped, non-overshooting animation of one axial stack, with a camera dolly that keeps the assembly framed at every explode value. Windings and stator move as one unit because the copper is wound onto the teeth.
 - Part callouts are linked both ways: selecting a rail item highlights and lifts the part in 3D; clicking a part updates the readout.
 - Part copy is short and concrete: what it is, what it does, what fails. It lives in the parts table only, and the readout reads from it.
 - No invented performance figures. Any numbers shown are typical-range illustration and labelled as such.

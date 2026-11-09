@@ -2,7 +2,7 @@
 
 An exploded brushless motor you can pull apart in the browser.
 
-Nine parts, rendered as real 3D geometry, separated by one spring-damped control. Built to teach what each part does and how the stack makes torque.
+Nine parts, rendered as real 3D geometry, separated by one damped, non-overshooting control. Built to teach what each part does and how the stack makes torque.
 
 ## Run it
 
@@ -28,7 +28,7 @@ The 3D canvas is decorative (`aria-hidden`); the parts table is the accessible s
 ```
 index.html      markup, the commutation figure, the parts table
 styles.css      tokens, layout, controls
-motor.js        three.js scene, explode spring, selection, commutation loop
+motor.js        three.js scene, explode easing, selection, commutation loop
 three.min.js    three.js r128 (MIT), vendored
 fonts/          Archivo + Azeret Mono (self-hosted woff2)
 DESIGN.md       visual system and tokens

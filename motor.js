@@ -15,7 +15,6 @@
   const startParam = new URLSearchParams(location.search).get('explode');
   let target = startParam === null ? 1 : Math.max(0, Math.min(1, Number(startParam) || 0));
   let cur = target;
-  let vel = 0;
 
   /* ---------- selection & readout ---------- */
   const rows = [...tbody.rows];
@@ -449,9 +448,11 @@
     }
     scene.add(rotor);
 
-    // assembled x positions (mm along the motor axis), then explode stations
+    // assembled x positions (mm along the motor axis), then explode stations.
+    // windings (5) and stator (6) share a travel: the copper is wound onto the
+    // teeth, so sliding them apart would drag the coils through the laminations.
     const assembled = { 1: 6, 2: 8, 3: 26, 4: 15, 5: 7, 6: 8, 7: 7, 8: 3, 9: 0 };
-    const stations = { 9: 0, 8: 11, 7: 23, 6: 32, 5: 64, 2: 88, 1: 116, 3: 150, 4: 178 };
+    const stations = { 9: 0, 8: 12, 7: 25, 6: 43, 5: 42, 2: 68, 1: 96, 3: 130, 4: 158 };
     for (const p of parts) {
       p.baseX = assembled[p.id];
       p.x1 = stations[p.id];
@@ -533,11 +534,14 @@
     const dir = new THREE.Vector3();
     const look = new THREE.Vector3();
 
+    const liftWith = { 5: '6', 6: '5' };
+
     function frame(dt) {
       const e = cur;
       for (const p of parts) {
         p.group.position.x = p.baseX + (p.x1 - p.baseX) * e;
-        p.lift = (p.lift || 0) + ((p.id === selected ? 2.6 : 0) - (p.lift || 0)) * 0.14;
+        const lifted = p.id === selected || liftWith[selected] === p.id;
+        p.lift = (p.lift || 0) + ((lifted ? 2.6 : 0) - (p.lift || 0)) * 0.14;
         p.group.position.y = p.lift;
       }
       // the rotor turns only while it is closed together
@@ -546,8 +550,8 @@
 
       // camera
       if (!reduce && !dragging && performance.now() > idleUntil && !selected) theta += dt * 0.05;
-      const d = (112 + 148 * e) * zoom;
-      look.set(15 + 74 * e, 0, 0);
+      const d = (112 + 122 * e) * zoom;
+      look.set(15 + 73 * e, 0, 0);
       dir.set(Math.sin(theta) * Math.cos(phi), Math.sin(phi), Math.cos(theta) * Math.cos(phi));
       camera.position.copy(look).addScaledVector(dir, d);
       camera.lookAt(look);
@@ -593,14 +597,10 @@
       if (visible && !document.hidden) {
         if (reduce) {
           cur = target;
-          vel = 0;
         } else {
-          vel = (vel + (target - cur) * 0.14) * 0.76;
-          cur += vel;
-          if (Math.abs(target - cur) < 0.0005 && Math.abs(vel) < 0.0005) {
-            cur = target;
-            vel = 0;
-          }
+          // exponential settle: frame-rate independent and never overshoots
+          cur += (target - cur) * (1 - Math.exp(-9 * dt));
+          if (Math.abs(target - cur) < 0.0005) cur = target;
         }
         frame(dt);
         applyDim();
