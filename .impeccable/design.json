@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T00:00:00Z",
+  "title": "Design System: Conductor",
+  "extensions": {
+    "colorMeta": {
+      "plate": { "role": "neutral", "displayName": "Lapped Granite", "canonical": "#e7eaeb" },
+      "ink": { "role": "primary", "displayName": "Instrument Ink", "canonical": "#14181a" },
+      "ink-2": { "role": "neutral", "displayName": "Body Grey", "canonical": "#4d5659" },
+      "ink-3": { "role": "neutral", "displayName": "Meta Grey", "canonical": "#606a6d" },
+      "copper": { "role": "accent", "displayName": "Winding Copper", "canonical": "#b45a2a", "tonalRamp": ["#7f3413", "#a8471e", "#b45a2a", "#c0703f", "#d9a37f"] },
+      "copper-ink": { "role": "accent", "displayName": "Copper Ink", "canonical": "#96401b" },
+      "steel": { "role": "surface", "displayName": "Machined Face", "canonical": "#fbfcfc" },
+      "cavity": { "role": "surface", "displayName": "Bore", "canonical": "#8d9a9c" },
+      "model-shell": { "role": "surface", "displayName": "Anodised Shell", "canonical": "#2b3134" },
+      "model-magnet-n": { "role": "accent", "displayName": "North Pole", "canonical": "#7a1a0e" },
+      "model-magnet-s": { "role": "accent", "displayName": "South Pole", "canonical": "#122c4c" },
+      "model-pcb": { "role": "accent", "displayName": "FR-4 Solder Mask", "canonical": "#15503a" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Archivo Expanded", "purpose": "H1 only. Width axis at 113%." },
+      "section": { "displayName": "Archivo Section", "purpose": "H2. Width axis at 110%." },
+      "body": { "displayName": "Archivo Reading", "purpose": "Prose, deck, table cells." },
+      "label": { "displayName": "Azeret Mono Label", "purpose": "Numerals, part names, controls, table heads. Never below 11px." }
+    },
+    "shadows": [
+      { "name": "stage-contact", "value": "three.js ShadowMaterial 0.16 over a plane at y=-27", "purpose": "Grounds the 3D assembly on the plate." }
+    ],
+    "motion": [
+      { "name": "explode-spring", "value": "v += (target - v) * 0.14; v *= 0.76", "purpose": "Per-frame damped spring for the part axis and the camera dolly." },
+      { "name": "swap", "value": "0.34s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Readout content change." },
+      { "name": "commutation", "value": "0.62s cubic-bezier(0.34, 1.1, 0.4, 1)", "purpose": "Field rotor step." }
+    ],
+    "breakpoints": [
+      { "name": "wide", "value": "1080px" },
+      { "name": "stack", "value": "880px" },
+      { "name": "phone", "value": "560px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Part rail item",
+      "kind": "nav",
+      "refersTo": "rail-item",
+      "description": "Nine-column index beneath the 3D stage. Selected state carries a copper top rule.",
+      "html": "<button class=\"ds-rail\" aria-pressed=\"true\"><b>01</b><span>Rotor bell</span></button>",
+      "css": ".ds-rail{display:flex;flex-direction:column;gap:3px;text-align:left;background:none;border:0;border-top:1px solid #bcc3c5;padding:7px 4px 2px;cursor:pointer;color:#4d5659;font-family:'Azeret Mono',monospace;font-size:11px;letter-spacing:.04em;line-height:1.25} .ds-rail b{font-size:11px;font-weight:500;color:#606a6d} .ds-rail[aria-pressed='true']{color:#14181a;border-top-color:#b45a2a} .ds-rail[aria-pressed='true'] b{color:#96401b} .ds-rail:focus-visible{outline:2px solid #96401b;outline-offset:3px}"
+    },
+    {
+      "name": "Readout plate",
+      "kind": "card",
+      "description": "The selected part's copy. Hairline top rule, copper index, three label/text rows.",
+      "html": "<div class=\"ds-readout\"><span class=\"ds-readout-num\">05 / 09</span><h2 class=\"ds-readout-name\">Windings</h2><div class=\"ds-readout-row\"><span>Material</span><p>Enamelled copper</p></div></div>",
+      "css": ".ds-readout{border-top:1px solid #14181a;padding-top:13px;color:#14181a;font-family:Archivo,system-ui,sans-serif} .ds-readout-num{font-family:'Azeret Mono',monospace;font-size:11px;letter-spacing:.12em;color:#96401b} .ds-readout-name{margin:4px 0 0;font-size:1.32rem;line-height:1.15;font-weight:620;font-stretch:108%;letter-spacing:-.02em} .ds-readout-row{display:grid;grid-template-columns:68px 1fr;gap:10px;margin-top:12px;align-items:baseline} .ds-readout-row span{font-family:'Azeret Mono',monospace;font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:#606a6d} .ds-readout-row p{margin:0;font-size:14.5px;line-height:1.45;color:#4d5659}"
+    },
+    {
+      "name": "Explode control",
+      "kind": "input",
+      "description": "Native range, restyled to a split hairline track. Readout zero-padded to three digits.",
+      "html": "<div class=\"ds-control\"><label for=\"ds-range\">Exploded view</label><output>100</output><input id=\"ds-range\" type=\"range\" min=\"0\" max=\"100\" value=\"100\"></div>",
+      "css": ".ds-control{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-family:'Azeret Mono',monospace} .ds-control label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#4d5659} .ds-control output{font-size:12px;color:#14181a;grid-column:2;grid-row:1} .ds-control input{grid-column:1/-1;-webkit-appearance:none;appearance:none;width:100%;height:30px;margin:0;background:transparent} .ds-control input::-webkit-slider-runnable-track{height:2px;background:#14181a} .ds-control input::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;margin-top:-7.5px;border-radius:50%;background:#14181a;border:2px solid #e7eaeb;box-shadow:0 0 0 1px #14181a}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lapped Surface Plate",
+    "overview": "A brushless motor is opened along its shaft on a granite inspection plate. The ground is a cool light grey ruled with a faint 24px grid; every rule is one hairline weight; the only saturated material on the page is copper, and it appears only where current flows. The futuristic note comes from exactness and real-time 3D, never from glow.",
+    "keyCharacteristics": [
+      "One accent: copper, and only for what conducts.",
+      "Hairlines, no cards, no radii.",
+      "Real 3D on a transparent canvas over the drafting grid.",
+      "Mono numerals, Archivo prose.",
+      "The table is the accessible source of truth; the canvas is decorative."
+    ],
+    "rules": [
+      { "name": "The Copper Rule", "body": "Copper marks current, the active phase, the selected rail item, and the emphasised half of the headline. Nothing else may be coloured.", "section": "colors" },
+      { "name": "The Hairline Rule", "body": "Rules are 1px; containers have no radius and no shadow. Depth belongs to the 3D scene only.", "section": "elevation" },
+      { "name": "The One Moment Rule", "body": "Motion has one authored moment — the explode and its camera dolly. Everything else is a short state ease.", "section": "typography" }
+    ],
+    "dos": [
+      "Keep functional labels at 11px or above.",
+      "Read part copy from the table so it lives in one place.",
+      "Mask the drafting grid away from body text."
+    ],
+    "donts": [
+      "Do not add a second accent colour.",
+      "Do not put cards, radii or drop shadows on DOM elements.",
+      "Do not animate every section on scroll."
+    ]
+  }
+}

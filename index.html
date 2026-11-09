@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conductor — inside a brushless motor</title>
+<meta name="description" content="An exploded outrunner brushless motor you can pull apart. Nine parts, one conductor, and the field that turns them.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <a class="mark" href="#top"><i></i>Conductor</a>
+  <nav aria-label="Sections">
+    <a href="#assembly">Assembly</a>
+    <a href="#parts">Parts</a>
+    <a href="#field">Field</a>
+  </nav>
+  <span class="unit">outrunner <b>12N14P</b></span>
+</header>
+
+<main id="top" class="wrap">
+
+  <div class="opening">
+    <h1>Twelve coils, fourteen magnets, <em>one air gap.</em></h1>
+    <dl class="spec">
+      <div><dt>Slots</dt><dd>12</dd></div>
+      <div><dt>Poles</dt><dd>14</dd></div>
+      <div><dt>Phases</dt><dd>3</dd></div>
+      <div><dt>Sensors</dt><dd>3</dd></div>
+    </dl>
+  </div>
+
+  <section class="stage" id="assembly" aria-labelledby="stage-h">
+    <h2 id="stage-h" class="sr">The assembly</h2>
+
+    <div class="brief">
+      <p class="deck">A standard outrunner, opened along its shaft. <b>Pull it apart</b> to see what the nine parts do, then put it back together and watch the field do the work.</p>
+
+      <div class="control">
+        <div class="control-head">
+          <label for="explode">Exploded view</label>
+          <output id="pct" for="explode" aria-live="off">100</output>
+        </div>
+        <input type="range" id="explode" min="0" max="100" value="100" step="1"
+               aria-describedby="explode-help">
+        <div class="control-foot">
+          <span id="explode-help">assembled</span>
+          <button type="button" id="toggle">Reassemble</button>
+          <span>apart</span>
+        </div>
+      </div>
+
+      <div class="readout" id="readout">
+        <div class="r-swap">
+          <span class="r-num">09 parts · 01 axis</span>
+          <h2 class="r-name" id="r-name">The assembly</h2>
+          <div class="r-body">
+            <p>The bell carries the magnets, the stator carries the coils, and the shaft carries everything else. Select any part — in the drawing or the rail below — to see what it does.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawing">
+      <div class="stage3d" id="stage3d">
+        <canvas id="scene" aria-hidden="true"></canvas>
+        <p class="nogl" id="nogl" hidden>This exploded view needs WebGL. The parts table below covers the same ground.</p>
+      </div>
+
+      <div class="rail" role="group" aria-label="Select a part">
+        <button type="button" data-part="1" aria-pressed="false"><b>01</b><span>Rotor bell</span></button>
+        <button type="button" data-part="2" aria-pressed="false"><b>02</b><span>Magnets</span></button>
+        <button type="button" data-part="3" aria-pressed="false"><b>03</b><span>Front bearing</span></button>
+        <button type="button" data-part="4" aria-pressed="false"><b>04</b><span>Shaft</span></button>
+        <button type="button" data-part="5" aria-pressed="false"><b>05</b><span>Windings</span></button>
+        <button type="button" data-part="6" aria-pressed="false"><b>06</b><span>Stator</span></button>
+        <button type="button" data-part="7" aria-pressed="false"><b>07</b><span>Hall board</span></button>
+        <button type="button" data-part="8" aria-pressed="false"><b>08</b><span>Rear bearing</span></button>
+        <button type="button" data-part="9" aria-pressed="false"><b>09</b><span>Mount base</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="field">
+    <div class="band-inner">
+      <h2>Why it turns</h2>
+      <p class="lede">Three phases, switched in order, make a magnetic field that walks around the stator. The magnets in the bell are already pointing somewhere. They chase the field, and the bell goes with them. <strong>That chase is the motor.</strong></p>
+
+      <div class="field-grid">
+        <div>
+          <button class="play" id="play" type="button" data-playing="true">
+            <span class="dot" aria-hidden="true"></span><span id="play-label">Pause</span>
+          </button>
+          <svg class="field-svg" id="field-svg" viewBox="0 0 360 360" role="img" aria-labelledby="field-title field-desc">
+            <title id="field-title">Six-step commutation, simplified to six stator poles.</title>
+            <desc id="field-desc">Six stator poles around a two-pole rotor. Two poles are energised at each step, one north and one south, and the rotor turns sixty degrees to line up with them.</desc>
+            <circle cx="180" cy="180" r="126" fill="none" stroke="#bcc3c5" stroke-width="1" stroke-dasharray="2 6"/>
+            <g class="pole" data-phase="0" data-angle="0">
+              <g transform="translate(180 180) rotate(0)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="306" y="180">A</text>
+            </g>
+            <g class="pole" data-phase="1" data-angle="60">
+              <g transform="translate(180 180) rotate(60)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="243" y="289">B</text>
+            </g>
+            <g class="pole" data-phase="2" data-angle="120">
+              <g transform="translate(180 180) rotate(120)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="117" y="289">C</text>
+            </g>
+            <g class="pole" data-phase="0" data-angle="180">
+              <g transform="translate(180 180) rotate(180)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="54" y="180">A</text>
+            </g>
+            <g class="pole" data-phase="1" data-angle="240">
+              <g transform="translate(180 180) rotate(240)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="117" y="71">B</text>
+            </g>
+            <g class="pole" data-phase="2" data-angle="300">
+              <g transform="translate(180 180) rotate(300)"><rect x="104" y="-30" width="38" height="60" rx="7"/></g>
+              <text x="243" y="71">C</text>
+            </g>
+
+            <g class="rotor-g" id="rotor">
+              <rect x="110" y="161" width="70" height="38" rx="19" fill="#ffffff" stroke="#14181a" stroke-width="1.2"/>
+              <rect x="180" y="161" width="70" height="38" rx="19" fill="#14181a"/>
+              <text x="145" y="180" text-anchor="middle" dominant-baseline="central" font-family="Azeret Mono, monospace" font-size="11" fill="#14181a">N</text>
+              <text x="215" y="180" text-anchor="middle" dominant-baseline="central" font-family="Azeret Mono, monospace" font-size="11" fill="#e7eaeb">S</text>
+            </g>
+            <circle cx="180" cy="180" r="5" fill="#14181a"/>
+          </svg>
+        </div>
+
+        <div>
+          <ol class="field-steps" id="steps" aria-label="Commutation steps">
+            <li><button type="button" data-step="0" aria-current="step"><b>01</b>A+</button></li>
+            <li><button type="button" data-step="1"><b>02</b>B+</button></li>
+            <li><button type="button" data-step="2"><b>03</b>C+</button></li>
+            <li><button type="button" data-step="3"><b>04</b>A−</button></li>
+            <li><button type="button" data-step="4"><b>05</b>B−</button></li>
+            <li><button type="button" data-step="5"><b>06</b>C−</button></li>
+          </ol>
+          <p class="fig-cap">Copper is north at this step, ink is south. The rotor's permanent magnet turns to put its south end against a north pole. Six steps, sixty degrees each. In a real 14-pole motor the field advances seven times per shaft turn, which is why the torque stays smooth.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="parts">
+    <div class="band-inner">
+      <h2>The nine parts</h2>
+      <p class="lede">Every figure here is typical of a hobby-class outrunner 40–60 mm across. Nothing in this table is a measurement of a specific motor.</p>
+
+      <div class="table-wrap">
+        <table>
+          <caption class="sr">Parts of a 12-slot, 14-pole outrunner brushless motor</caption>
+          <thead>
+            <tr><th scope="col">No.</th><th scope="col">Part</th><th scope="col">Material</th><th scope="col">What it does</th><th scope="col">How it fails</th></tr>
+          </thead>
+          <tbody id="tbody">
+            <tr>
+              <td>01</td>
+              <td>Rotor bell</td>
+              <td data-label="Material">Anodised aluminium</td>
+              <td data-label="Does">The spinning shell. It holds fourteen magnets at a fixed radius and carries the shaft, so the turning field has something to push against.</td>
+              <td data-label="Fails">A dent closes the air gap. Once a magnet touches the stator, the motor is scrap.</td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td>Magnets</td>
+              <td data-label="Material">Sintered NdFeB, nickel-plated</td>
+              <td data-label="Does">Fourteen poles, alternating north and south. Their fixed field is what the stator's field pushes against — no magnets, no torque.</td>
+              <td data-label="Fails">Heat. Above roughly 150 °C a NdFeB magnet loses strength permanently, and the motor loses torque with it.</td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td>Front bearing</td>
+              <td data-label="Material">Steel races, steel or ceramic balls</td>
+              <td data-label="Does">Holds the bell end of the shaft on centre and takes the radial load from the propeller or pulley.</td>
+              <td data-label="Fails">Grease cooks out, play appears, and the rotor starts to orbit instead of spin.</td>
+            </tr>
+            <tr>
+              <td>04</td>
+              <td>Shaft</td>
+              <td data-label="Material">Hardened steel</td>
+              <td data-label="Does">The only part that leaves the motor. Everything else in the stack exists to turn this.</td>
+              <td data-label="Fails">A bent shaft takes both bearings with it, and the air gap goes uneven.</td>
+            </tr>
+            <tr>
+              <td>05</td>
+              <td>Windings</td>
+              <td data-label="Material">Enamelled copper</td>
+              <td data-label="Does">Twelve coils in three phases. Current through a coil makes an electromagnet, and switching which coils are on is what moves the field.</td>
+              <td data-label="Fails">The enamel breaks down and two phases short. Usually heat, sometimes a nick during assembly.</td>
+            </tr>
+            <tr>
+              <td>06</td>
+              <td>Stator</td>
+              <td data-label="Material">0.2–0.5 mm silicon steel, laminated</td>
+              <td data-label="Does">Gives the field a low-resistance path and aims it at the magnets. The stack is insulated so eddy currents don't turn torque into heat.</td>
+              <td data-label="Fails">Lamination insulation fails locally; that spot overheats and spreads.</td>
+            </tr>
+            <tr>
+              <td>07</td>
+              <td>Hall sensor board</td>
+              <td data-label="Material">FR-4, three Hall-effect ICs</td>
+              <td data-label="Does">Watches which magnet is passing and tells the controller. Without it, the controller is guessing when to switch phases.</td>
+              <td data-label="Fails">One dead sensor and the motor stutters, refuses to start, or runs backwards.</td>
+            </tr>
+            <tr>
+              <td>08</td>
+              <td>Rear bearing</td>
+              <td data-label="Material">Steel races</td>
+              <td data-label="Does">The second support. With the front bearing it fixes the rotor's axis — two points define a line.</td>
+              <td data-label="Fails">Usually first to go: it sits closest to the stator's heat.</td>
+            </tr>
+            <tr>
+              <td>09</td>
+              <td>Mount base</td>
+              <td data-label="Material">Machined aluminium</td>
+              <td data-label="Does">Holds the stator still and bolts the motor to the machine. The reaction torque you feel here equals the torque the shaft delivers.</td>
+              <td data-label="Fails">Stripped threads or a cracked lug — the motor turns, the machine doesn't.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Drawn in SVG, no images. Geometry follows a 12-slot, 14-pole outrunner; proportions are illustrative, not a specific motor.</p>
+  <a href="#top">Back to the assembly</a>
+</footer>
+
+<script src="three.min.js"></script>
+<script src="motor.js"></script>
+</body>
+</html>
